@@ -1,0 +1,82 @@
+4.1 ) On le place apres les tokens afin qu'il n'y est pas de confusion
+exemple : _58 pourrait être reconnu comme ID puis INT
+ou un ID , Il n'y a pas moyen de faire la différence.
+Il pourrait aussi lire d'autre instruction ( MOVE, TURN ) comme des identifiants.
+
+
+5.1) 
+Lorsque l'on ajoute l'instruciton IF-ELSE nous obtenons dans 
+parser.output un conflit SHIFT/REDUCE
+contenu de parser.output : 
+
+5.2)
+59: shift/reduce conflict (shift 60, reduce 19) on ELSE
+state 59
+	simple_stmt : IF test THEN stmt .  (19)
+	simple_stmt : IF test THEN stmt . ELSE stmt  (21)
+
+	ELSE  shift 60
+	BEGIN_EXEC  reduce 19
+	END_EXEC  reduce 19
+	SEMI  reduce 19
+	END  reduce 19
+	DEFINE_NEW_INSTRUCTION  reduce 19
+
+5.3)
+Un cas minimal possible serait de faire : 
+
+IF test THEN IF test THEN stmt ELSE stmt
+On ne peut savoir si le ELSE appartient au premier IF 
+ou au second.
+on l'analyseur hésite donc entre 
+IF test THEN 
+    IF test THEN 
+        stmt 
+    ELSE 
+        stmt
+
+et 
+
+IF test THEN 
+    IF test THEN 
+        stmt 
+ELSE 
+    stmt
+
+5.4)
+La première possibilité a fonctionné dans ce cas
+cependant il peut s'agir d'un coup de chance et ne
+correspond donc pas à une réponse fiable.
+
+
+Pour la seconde possibilité,
+Au lieu d'avoir les instructions :
+IF test THEN stmt
+
+et 
+
+IF test THEN stmt ELSE stmt
+
+On peut avoir :
+
+IF test THEN stmt
+
+et 
+
+IF test THEN stmt_special ELSE stmt
+
+avec 
+
+stmt_special: IF test THEN stmt ELSE stmt
+
+Cependant je n'ai pas trouvé comment faire en sorte que le stmt_special
+puis aussi fournir des stmt sans causer de conflit.
+
+
+Pour la 3ème possibilité, elle a en effet résolu les conflits
+mais lorsque j'ai testé avec ./samples/test.karel ( en décommentant le IF ELSE )
+le parser.output ne trouvait pas de conflit mais le fichier renvoyé une erreur de syntaxe
+à l'emplacement du IF ELSE.
+Et d'après le résultat du parser.out, le IF ELSE a été traiter comme un IF
+( et donc la lecture du ELSE a donné une erreur car le IF a été reduce ).
+
