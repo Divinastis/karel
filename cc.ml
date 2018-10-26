@@ -18,12 +18,12 @@ let output_quad out a q =
 	Printf.fprintf out "\t%s\n"
 		(match q with
 		| Quad.GOTO d 			-> Printf.sprintf "goto L%d" d
-		| Quad.GOTO_EQ (d, a, b) -> Printf.sprintf "goto_eq L%d, v%d, v%d" d a b
-		| Quad.GOTO_NE (d, a, b) -> Printf.sprintf "goto_ne L%d, v%d, v%d" d a b
-		| Quad.GOTO_LT (d, a, b) -> Printf.sprintf "goto_lt L%d, v%d, v%d" d a b
-		| Quad.GOTO_LE (d, a, b) -> Printf.sprintf "goto_le L%d, v%d, v%d" d a b
-		| Quad.GOTO_GT (d, a, b) -> Printf.sprintf "goto_gt L%d, v%d, v%d" d a b
-		| Quad.GOTO_GE (d, a, b) -> Printf.sprintf "goto_ge L%d, v%d, v%d" d a b
+		| Quad.GOTO_EQ (d, a, b) -> Printf.sprintf "goto_eq L%d, r%d, r%d" d a b
+		| Quad.GOTO_NE (d, a, b) -> Printf.sprintf "goto_ne L%d, r%d, r%d" d a b
+		| Quad.GOTO_LT (d, a, b) -> Printf.sprintf "goto_lt L%d, r%d, r%d" d a b
+		| Quad.GOTO_LE (d, a, b) -> Printf.sprintf "goto_le L%d, r%d, r%d" d a b
+		| Quad.GOTO_GT (d, a, b) -> Printf.sprintf "goto_gt L%d, r%d, r%d" d a b
+		| Quad.GOTO_GE (d, a, b) -> Printf.sprintf "goto_ge L%d, r%d, r%d" d a b
 		| Quad.CALL d			-> Printf.sprintf "call L%d" d
 		| _					-> Quad.to_string q
 		)

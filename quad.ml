@@ -32,7 +32,7 @@ let to_string q =
 	| NAND (d, a, b)	-> Printf.sprintf "nand r%d, r%d, r%d" d a b
 	| NOR (d, a, b)		-> Printf.sprintf "nor r%d, r%d, r%d" d a b
 	| SET (d, a)		-> Printf.sprintf "set r%d, r%d" d a
-	| SETI (d, a) 		-> Printf.sprintf "seti r%d, %d" d a
+	| SETI (d, a) 		-> Printf.sprintf "seti r%d, #%d" d a
 	| GOTO d 			-> Printf.sprintf "goto %d" d
 	| GOTO_EQ (d, a, b) -> Printf.sprintf "goto_eq %d, r%d, r%d" d a b
 	| GOTO_NE (d, a, b) -> Printf.sprintf "goto_ne %d, r%d, r%d" d a b

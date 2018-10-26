@@ -16,7 +16,7 @@ BEGINNING-OF-PROGRAM
 	BEGIN
 		move;
 		move
-	END
+	END;
 	
 	IF next-to-a-beeper THEN
 		move

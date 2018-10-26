@@ -67,10 +67,8 @@ IF test THEN stmt_special ELSE stmt
 
 avec 
 
-stmt_special: IF test THEN stmt ELSE stmt
+stmt_special similaire à stmt mais "fermé" ( on n'en sort pas )
 
-Cependant je n'ai pas trouvé comment faire en sorte que le stmt_special
-puis aussi fournir des stmt sans causer de conflit.
 
 
 Pour la 3ème possibilité, elle a en effet résolu les conflits

@@ -15,39 +15,44 @@
    9        | stmts SEMI
 
   10  stmt : simple_stmt
+  11       | ITERATE INT TIMES stmt
+  12       | WHILE test DO stmt
+  13       | IF test THEN stmt
+  14       | IF test THEN stmt_special ELSE stmt
 
-  11  simple_stmt : TURN_LEFT
-  12              | TURN_OFF
-  13              | MOVE
-  14              | PICK_BEEPER
-  15              | PUT_BEEPER
-  16              | BEGIN stmts END
-  17              | ITERATE INT TIMES stmt
-  18              | WHILE test DO stmt
-  19              | IF test THEN stmt
-  20              | ID
-  21              | IF test THEN stmt ELSE stmt
+  15  stmt_special : simple_stmt
+  16               | ITERATE INT TIMES stmt_special
+  17               | WHILE test DO stmt_special
+  18               | IF test THEN stmt_special ELSE stmt_special
 
-  22  test : FRONT_IS_CLEAR
-  23       | FRONT_IS_BLOCKED
-  24       | LEFT_IS_CLEAR
-  25       | LEFT_IS_BLOCKED
-  26       | RIGHT_IS_CLEAR
-  27       | RIGHT_IS_BLOCKED
-  28       | NEXT_TO_A_BEEPER
-  29       | NOT_NEXT_TO_A_BEEPER
-  30       | FACING_NORTH
-  31       | NOT_FACING_NORTH
-  32       | FACING_EAST
-  33       | NOT_FACING_EAST
-  34       | FACING_SOUTH
-  35       | NOT_FACING_SOUTH
-  36       | FACING_WEST
-  37       | NOT_FACING_WEST
-  38       | ANY_BEEPERS_IN_BEEPER_BAG
-  39       | NO_BEEPERS_IN_BEEPER_BAG
+  19  simple_stmt : TURN_LEFT
+  20              | TURN_OFF
+  21              | MOVE
+  22              | PICK_BEEPER
+  23              | PUT_BEEPER
+  24              | BEGIN stmts END
+  25              | ID
 
-  40  %entry% : '\001' prog
+  26  test : FRONT_IS_CLEAR
+  27       | FRONT_IS_BLOCKED
+  28       | LEFT_IS_CLEAR
+  29       | LEFT_IS_BLOCKED
+  30       | RIGHT_IS_CLEAR
+  31       | RIGHT_IS_BLOCKED
+  32       | NEXT_TO_A_BEEPER
+  33       | NOT_NEXT_TO_A_BEEPER
+  34       | FACING_NORTH
+  35       | NOT_FACING_NORTH
+  36       | FACING_EAST
+  37       | NOT_FACING_EAST
+  38       | FACING_SOUTH
+  39       | NOT_FACING_SOUTH
+  40       | FACING_WEST
+  41       | NOT_FACING_WEST
+  42       | ANY_BEEPERS_IN_BEEPER_BAG
+  43       | NO_BEEPERS_IN_BEEPER_BAG
+
+  44  %entry% : '\001' prog
 
 state 0
 	$accept : . %entry% $end  (0)
@@ -59,7 +64,7 @@ state 0
 
 
 state 1
-	%entry% : '\001' . prog  (40)
+	%entry% : '\001' . prog  (44)
 
 	BEGIN_PROG  shift 3
 	.  error
@@ -85,9 +90,9 @@ state 3
 
 
 state 4
-	%entry% : '\001' prog .  (40)
+	%entry% : '\001' prog .  (44)
 
-	.  reduce 40
+	.  reduce 44
 
 
 state 5
@@ -170,25 +175,25 @@ state 11
 
 
 state 12
-	simple_stmt : MOVE .  (13)
+	simple_stmt : MOVE .  (21)
 
-	.  reduce 13
+	.  reduce 21
 
 
 state 13
-	simple_stmt : TURN_LEFT .  (11)
+	simple_stmt : TURN_LEFT .  (19)
 
-	.  reduce 11
+	.  reduce 19
 
 
 state 14
-	simple_stmt : TURN_OFF .  (12)
+	simple_stmt : TURN_OFF .  (20)
 
-	.  reduce 12
+	.  reduce 20
 
 
 state 15
-	simple_stmt : BEGIN . stmts END  (16)
+	simple_stmt : BEGIN . stmts END  (24)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -208,26 +213,26 @@ state 15
 
 
 state 16
-	simple_stmt : PICK_BEEPER .  (14)
+	simple_stmt : PICK_BEEPER .  (22)
 
-	.  reduce 14
+	.  reduce 22
 
 
 state 17
-	simple_stmt : PUT_BEEPER .  (15)
+	simple_stmt : PUT_BEEPER .  (23)
 
-	.  reduce 15
+	.  reduce 23
 
 
 state 18
-	simple_stmt : ITERATE . INT TIMES stmt  (17)
+	stmt : ITERATE . INT TIMES stmt  (11)
 
 	INT  shift 28
 	.  error
 
 
 state 19
-	simple_stmt : WHILE . test DO stmt  (18)
+	stmt : WHILE . test DO stmt  (12)
 
 	NEXT_TO_A_BEEPER  shift 29
 	FRONT_IS_CLEAR  shift 30
@@ -253,8 +258,8 @@ state 19
 
 
 state 20
-	simple_stmt : IF . test THEN stmt  (19)
-	simple_stmt : IF . test THEN stmt ELSE stmt  (21)
+	stmt : IF . test THEN stmt  (13)
+	stmt : IF . test THEN stmt_special ELSE stmt  (14)
 
 	NEXT_TO_A_BEEPER  shift 29
 	FRONT_IS_CLEAR  shift 30
@@ -280,9 +285,9 @@ state 20
 
 
 state 21
-	simple_stmt : ID .  (20)
+	simple_stmt : ID .  (25)
 
-	.  reduce 20
+	.  reduce 25
 
 
 state 22
@@ -323,7 +328,7 @@ state 26
 state 27
 	stmts : stmts . SEMI stmt  (8)
 	stmts : stmts . SEMI  (9)
-	simple_stmt : BEGIN stmts . END  (16)
+	simple_stmt : BEGIN stmts . END  (24)
 
 	SEMI  shift 50
 	END  shift 52
@@ -331,130 +336,130 @@ state 27
 
 
 state 28
-	simple_stmt : ITERATE INT . TIMES stmt  (17)
+	stmt : ITERATE INT . TIMES stmt  (11)
 
 	TIMES  shift 53
 	.  error
 
 
 state 29
-	test : NEXT_TO_A_BEEPER .  (28)
-
-	.  reduce 28
-
-
-state 30
-	test : FRONT_IS_CLEAR .  (22)
-
-	.  reduce 22
-
-
-state 31
-	test : FRONT_IS_BLOCKED .  (23)
-
-	.  reduce 23
-
-
-state 32
-	test : LEFT_IS_CLEAR .  (24)
-
-	.  reduce 24
-
-
-state 33
-	test : LEFT_IS_BLOCKED .  (25)
-
-	.  reduce 25
-
-
-state 34
-	test : RIGHT_IS_CLEAR .  (26)
-
-	.  reduce 26
-
-
-state 35
-	test : RIGHT_IS_BLOCKED .  (27)
-
-	.  reduce 27
-
-
-state 36
-	test : NOT_NEXT_TO_A_BEEPER .  (29)
-
-	.  reduce 29
-
-
-state 37
-	test : FACING_NORTH .  (30)
-
-	.  reduce 30
-
-
-state 38
-	test : NOT_FACING_NORTH .  (31)
-
-	.  reduce 31
-
-
-state 39
-	test : FACING_EAST .  (32)
+	test : NEXT_TO_A_BEEPER .  (32)
 
 	.  reduce 32
 
 
-state 40
-	test : NOT_FACING_EAST .  (33)
+state 30
+	test : FRONT_IS_CLEAR .  (26)
+
+	.  reduce 26
+
+
+state 31
+	test : FRONT_IS_BLOCKED .  (27)
+
+	.  reduce 27
+
+
+state 32
+	test : LEFT_IS_CLEAR .  (28)
+
+	.  reduce 28
+
+
+state 33
+	test : LEFT_IS_BLOCKED .  (29)
+
+	.  reduce 29
+
+
+state 34
+	test : RIGHT_IS_CLEAR .  (30)
+
+	.  reduce 30
+
+
+state 35
+	test : RIGHT_IS_BLOCKED .  (31)
+
+	.  reduce 31
+
+
+state 36
+	test : NOT_NEXT_TO_A_BEEPER .  (33)
 
 	.  reduce 33
 
 
-state 41
-	test : FACING_SOUTH .  (34)
+state 37
+	test : FACING_NORTH .  (34)
 
 	.  reduce 34
 
 
-state 42
-	test : NOT_FACING_SOUTH .  (35)
+state 38
+	test : NOT_FACING_NORTH .  (35)
 
 	.  reduce 35
 
 
-state 43
-	test : FACING_WEST .  (36)
+state 39
+	test : FACING_EAST .  (36)
 
 	.  reduce 36
 
 
-state 44
-	test : NOT_FACING_WEST .  (37)
+state 40
+	test : NOT_FACING_EAST .  (37)
 
 	.  reduce 37
 
 
-state 45
-	test : ANY_BEEPERS_IN_BEEPER_BAG .  (38)
+state 41
+	test : FACING_SOUTH .  (38)
 
 	.  reduce 38
 
 
-state 46
-	test : NO_BEEPERS_IN_BEEPER_BAG .  (39)
+state 42
+	test : NOT_FACING_SOUTH .  (39)
 
 	.  reduce 39
 
 
+state 43
+	test : FACING_WEST .  (40)
+
+	.  reduce 40
+
+
+state 44
+	test : NOT_FACING_WEST .  (41)
+
+	.  reduce 41
+
+
+state 45
+	test : ANY_BEEPERS_IN_BEEPER_BAG .  (42)
+
+	.  reduce 42
+
+
+state 46
+	test : NO_BEEPERS_IN_BEEPER_BAG .  (43)
+
+	.  reduce 43
+
+
 state 47
-	simple_stmt : WHILE test . DO stmt  (18)
+	stmt : WHILE test . DO stmt  (12)
 
 	DO  shift 54
 	.  error
 
 
 state 48
-	simple_stmt : IF test . THEN stmt  (19)
-	simple_stmt : IF test . THEN stmt ELSE stmt  (21)
+	stmt : IF test . THEN stmt  (13)
+	stmt : IF test . THEN stmt_special ELSE stmt  (14)
 
 	THEN  shift 55
 	.  error
@@ -496,13 +501,13 @@ state 51
 
 
 state 52
-	simple_stmt : BEGIN stmts END .  (16)
+	simple_stmt : BEGIN stmts END .  (24)
 
-	.  reduce 16
+	.  reduce 24
 
 
 state 53
-	simple_stmt : ITERATE INT TIMES . stmt  (17)
+	stmt : ITERATE INT TIMES . stmt  (11)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -521,7 +526,7 @@ state 53
 
 
 state 54
-	simple_stmt : WHILE test DO . stmt  (18)
+	stmt : WHILE test DO . stmt  (12)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -540,8 +545,8 @@ state 54
 
 
 state 55
-	simple_stmt : IF test THEN . stmt  (19)
-	simple_stmt : IF test THEN . stmt ELSE stmt  (21)
+	stmt : IF test THEN . stmt  (13)
+	stmt : IF test THEN . stmt_special ELSE stmt  (14)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -549,14 +554,15 @@ state 55
 	BEGIN  shift 15
 	PICK_BEEPER  shift 16
 	PUT_BEEPER  shift 17
-	ITERATE  shift 18
-	WHILE  shift 19
-	IF  shift 20
+	ITERATE  shift 60
+	WHILE  shift 61
+	IF  shift 62
 	ID  shift 21
 	.  error
 
-	stmt  goto 60
-	simple_stmt  goto 25
+	stmt  goto 63
+	simple_stmt  goto 64
+	stmt_special  goto 65
 
 
 state 56
@@ -572,29 +578,130 @@ state 57
 
 
 state 58
-	simple_stmt : ITERATE INT TIMES stmt .  (17)
+	stmt : ITERATE INT TIMES stmt .  (11)
 
-	.  reduce 17
+	.  reduce 11
 
 
 state 59
-	simple_stmt : WHILE test DO stmt .  (18)
+	stmt : WHILE test DO stmt .  (12)
 
-	.  reduce 18
+	.  reduce 12
 
 
 state 60
-	simple_stmt : IF test THEN stmt .  (19)
-	simple_stmt : IF test THEN stmt . ELSE stmt  (21)
+	stmt : ITERATE . INT TIMES stmt  (11)
+	stmt_special : ITERATE . INT TIMES stmt_special  (16)
 
-	ELSE  shift 61
-	END_EXEC  reduce 19
-	SEMI  reduce 19
-	END  reduce 19
+	INT  shift 66
+	.  error
 
 
 state 61
-	simple_stmt : IF test THEN stmt ELSE . stmt  (21)
+	stmt : WHILE . test DO stmt  (12)
+	stmt_special : WHILE . test DO stmt_special  (17)
+
+	NEXT_TO_A_BEEPER  shift 29
+	FRONT_IS_CLEAR  shift 30
+	FRONT_IS_BLOCKED  shift 31
+	LEFT_IS_CLEAR  shift 32
+	LEFT_IS_BLOCKED  shift 33
+	RIGHT_IS_CLEAR  shift 34
+	RIGHT_IS_BLOCKED  shift 35
+	NOT_NEXT_TO_A_BEEPER  shift 36
+	FACING_NORTH  shift 37
+	NOT_FACING_NORTH  shift 38
+	FACING_EAST  shift 39
+	NOT_FACING_EAST  shift 40
+	FACING_SOUTH  shift 41
+	NOT_FACING_SOUTH  shift 42
+	FACING_WEST  shift 43
+	NOT_FACING_WEST  shift 44
+	ANY_BEEPERS_IN_BEEPER_BAG  shift 45
+	NO_BEEPERS_IN_BEEPER_BAG  shift 46
+	.  error
+
+	test  goto 67
+
+
+state 62
+	stmt : IF . test THEN stmt  (13)
+	stmt : IF . test THEN stmt_special ELSE stmt  (14)
+	stmt_special : IF . test THEN stmt_special ELSE stmt_special  (18)
+
+	NEXT_TO_A_BEEPER  shift 29
+	FRONT_IS_CLEAR  shift 30
+	FRONT_IS_BLOCKED  shift 31
+	LEFT_IS_CLEAR  shift 32
+	LEFT_IS_BLOCKED  shift 33
+	RIGHT_IS_CLEAR  shift 34
+	RIGHT_IS_BLOCKED  shift 35
+	NOT_NEXT_TO_A_BEEPER  shift 36
+	FACING_NORTH  shift 37
+	NOT_FACING_NORTH  shift 38
+	FACING_EAST  shift 39
+	NOT_FACING_EAST  shift 40
+	FACING_SOUTH  shift 41
+	NOT_FACING_SOUTH  shift 42
+	FACING_WEST  shift 43
+	NOT_FACING_WEST  shift 44
+	ANY_BEEPERS_IN_BEEPER_BAG  shift 45
+	NO_BEEPERS_IN_BEEPER_BAG  shift 46
+	.  error
+
+	test  goto 68
+
+
+state 63
+	stmt : IF test THEN stmt .  (13)
+
+	.  reduce 13
+
+
+state 64
+	stmt : simple_stmt .  (10)
+	stmt_special : simple_stmt .  (15)
+
+	END_EXEC  reduce 10
+	SEMI  reduce 10
+	END  reduce 10
+	ELSE  reduce 15
+
+
+state 65
+	stmt : IF test THEN stmt_special . ELSE stmt  (14)
+
+	ELSE  shift 69
+	.  error
+
+
+state 66
+	stmt : ITERATE INT . TIMES stmt  (11)
+	stmt_special : ITERATE INT . TIMES stmt_special  (16)
+
+	TIMES  shift 70
+	.  error
+
+
+state 67
+	stmt : WHILE test . DO stmt  (12)
+	stmt_special : WHILE test . DO stmt_special  (17)
+
+	DO  shift 71
+	.  error
+
+
+state 68
+	stmt : IF test . THEN stmt  (13)
+	stmt : IF test . THEN stmt_special ELSE stmt  (14)
+	stmt_special : IF test . THEN stmt_special ELSE stmt_special  (18)
+
+	THEN  shift 72
+	.  error
+
+
+state 69
+	stmt : IF test THEN stmt_special ELSE . stmt  (14)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -608,15 +715,126 @@ state 61
 	ID  shift 21
 	.  error
 
-	stmt  goto 62
+	stmt  goto 73
 	simple_stmt  goto 25
 
 
-state 62
-	simple_stmt : IF test THEN stmt ELSE stmt .  (21)
+state 70
+	stmt : ITERATE INT TIMES . stmt  (11)
+	stmt_special : ITERATE INT TIMES . stmt_special  (16)
 
-	.  reduce 21
+	MOVE  shift 12
+	TURN_LEFT  shift 13
+	TURN_OFF  shift 14
+	BEGIN  shift 15
+	PICK_BEEPER  shift 16
+	PUT_BEEPER  shift 17
+	ITERATE  shift 60
+	WHILE  shift 61
+	IF  shift 62
+	ID  shift 21
+	.  error
+
+	stmt  goto 58
+	simple_stmt  goto 64
+	stmt_special  goto 74
 
 
-44 terminals, 10 nonterminals
-41 grammar rules, 63 states
+state 71
+	stmt : WHILE test DO . stmt  (12)
+	stmt_special : WHILE test DO . stmt_special  (17)
+
+	MOVE  shift 12
+	TURN_LEFT  shift 13
+	TURN_OFF  shift 14
+	BEGIN  shift 15
+	PICK_BEEPER  shift 16
+	PUT_BEEPER  shift 17
+	ITERATE  shift 60
+	WHILE  shift 61
+	IF  shift 62
+	ID  shift 21
+	.  error
+
+	stmt  goto 59
+	simple_stmt  goto 64
+	stmt_special  goto 75
+
+
+state 72
+	stmt : IF test THEN . stmt  (13)
+	stmt : IF test THEN . stmt_special ELSE stmt  (14)
+	stmt_special : IF test THEN . stmt_special ELSE stmt_special  (18)
+
+	MOVE  shift 12
+	TURN_LEFT  shift 13
+	TURN_OFF  shift 14
+	BEGIN  shift 15
+	PICK_BEEPER  shift 16
+	PUT_BEEPER  shift 17
+	ITERATE  shift 60
+	WHILE  shift 61
+	IF  shift 62
+	ID  shift 21
+	.  error
+
+	stmt  goto 63
+	simple_stmt  goto 64
+	stmt_special  goto 76
+
+
+state 73
+	stmt : IF test THEN stmt_special ELSE stmt .  (14)
+
+	.  reduce 14
+
+
+state 74
+	stmt_special : ITERATE INT TIMES stmt_special .  (16)
+
+	.  reduce 16
+
+
+state 75
+	stmt_special : WHILE test DO stmt_special .  (17)
+
+	.  reduce 17
+
+
+state 76
+	stmt : IF test THEN stmt_special . ELSE stmt  (14)
+	stmt_special : IF test THEN stmt_special . ELSE stmt_special  (18)
+
+	ELSE  shift 77
+	.  error
+
+
+state 77
+	stmt : IF test THEN stmt_special ELSE . stmt  (14)
+	stmt_special : IF test THEN stmt_special ELSE . stmt_special  (18)
+
+	MOVE  shift 12
+	TURN_LEFT  shift 13
+	TURN_OFF  shift 14
+	BEGIN  shift 15
+	PICK_BEEPER  shift 16
+	PUT_BEEPER  shift 17
+	ITERATE  shift 60
+	WHILE  shift 61
+	IF  shift 62
+	ID  shift 21
+	.  error
+
+	stmt  goto 73
+	simple_stmt  goto 64
+	stmt_special  goto 78
+
+
+state 78
+	stmt_special : IF test THEN stmt_special ELSE stmt_special .  (18)
+
+	.  reduce 18
+
+
+44 terminals, 11 nonterminals
+45 grammar rules, 79 states
