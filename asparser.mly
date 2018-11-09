@@ -115,7 +115,7 @@ command:
 |	GOTO_LE LABEL COMMA REG COMMA REG
 		{ Comp.gen (Quad.GOTO_LE (resolve_label $2, $4, $6)) }
 |	CALL LABEL
-		{ Comp.gen (Quad.GOTO (resolve_label $2)) }
+		{ Comp.gen (Quad.CALL (resolve_label $2)) }
 |	RETURN
 		{ Comp.gen Quad.RETURN }
 |	INVOKE INT COMMA INT COMMA INT
