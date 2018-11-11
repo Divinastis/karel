@@ -62,12 +62,20 @@ open Karel
 
 %%
 
-prog:	BEGIN_PROG before_sous_prog liste_sous_prog after_sous_prog BEGIN_EXEC  stmts_opt END_EXEC END_PROG
-			{ backpatch $2 $4}
+prog:	BEGIN_PROG sous_prog BEGIN_EXEC  stmts_opt END_EXEC END_PROG
+			{ () }
+;
+
+sous_prog: before_sous_prog liste_sous_prog after_sous_prog
+			{ backpatch $1 (nextquad ()) }
 ;
 
 before_sous_prog: 
-				{ gen (GOTO(0)) }
+				{ 
+					let a = nextquad () in 
+					let _ = gen (GOTO(0)) in 
+					a
+				}
 ;
 
 after_sous_prog: 
@@ -87,7 +95,7 @@ define_new:
 					if is_defined $3 then 
 					raise (SyntaxError "Le sous prog est deja definie ")
 					else 
-					define $3 $1
+					let _ = define $3 $1 in
 					gen (RETURN)
 				 }
 ;

@@ -32,7 +32,9 @@ BEGINNING-OF-PROGRAM
 		turnleft;
 		turnleft;		
 	  
-	  END
+	  END;
+	  
+	  turnoff;
 
   END-OF-EXECUTION
 END-OF-PROGRAM
