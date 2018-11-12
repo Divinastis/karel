@@ -15,7 +15,7 @@ L6:
 L7:
 	invoke 1, 0, 0
 L8:
-	invoke 11, 0, 0
+	invoke 11, 4, 0
 L9:
 	seti r5, #0
 L10:
@@ -39,7 +39,7 @@ L18:
 L19:
 	invoke 1, 0, 0
 L20:
-	invoke 11, 0, 0
+	invoke 11, 8, 0
 L21:
 	seti r9, #0
 L22:
