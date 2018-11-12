@@ -94,8 +94,7 @@ define_new:
 					raise (SyntaxError "Le sous prog est deja definie ")
 					else 
 					let _ = define $3 $1 in
-					let _ = gen (RETURN) in 
-					()
+					gen (RETURN)
 				 }
 ;
 
